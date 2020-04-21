@@ -1,6 +1,6 @@
 package com.abdo.document.controller;
 
-import com.abdo.document.entity.Document;
+import com.abdo.document.dto.DocumentDTO;
 import com.abdo.document.service.DocumentService;
 import com.abdo.document.service.FileService;
 import lombok.AllArgsConstructor;
@@ -24,12 +24,12 @@ public class FileController {
     private DocumentService documentService;
 
     @GetMapping({"/home", "/", ""})
-    public ModelAndView prepareHomePage(@ModelAttribute ArrayList<Document> documents, Authentication authentication) {
+    public ModelAndView prepareHomePage(@ModelAttribute ArrayList<DocumentDTO> documents, Authentication authentication) {
         return documentService.getAllDocumentsAsModel(authentication);
     }
 
     @PostMapping(path = "home")
-    public ModelAndView upload(@RequestParam("file") MultipartFile file, Authentication authentication, @ModelAttribute ArrayList<Document> documents) {
+    public ModelAndView upload(@RequestParam("file") MultipartFile file, Authentication authentication, @ModelAttribute ArrayList<DocumentDTO> documents) {
         String updatedFileName = fileService.saveFileToLocal(file);
         documentService.saveDocument(file, updatedFileName, authentication);
         return documentService.getAllDocumentsAsModel(authentication);
@@ -48,8 +48,8 @@ public class FileController {
     }
 
 
-    @GetMapping("/error")
-    public String error() {
-        return "error";
-    }
+//    @GetMapping("/error")
+//    public String error() {
+//        return "error";
+//    }
 }

@@ -1,9 +1,11 @@
 package com.abdo.document.service;
 
+import com.abdo.document.dto.DocumentDTO;
 import com.abdo.document.entity.Document;
 import com.abdo.document.entity.DocumentAuthority;
 import com.abdo.document.repository.DocumentRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,13 +30,15 @@ public class DocumentService {
 
     private FileService fileService;
 
+    private ModelMapper modelMapper;
 
-    public ArrayList<Document> getAllDocuments(Authentication authentication) {
-        return new ArrayList<>(documentRepository.findAllByAuthorities(
+
+    public List<Document> getAllDocuments(Authentication authentication) {
+        return documentRepository.findAllByAuthorities(
                 authentication.getAuthorities()
                         .stream()
                         .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList())));
+                        .collect(Collectors.toList()));
     }
 
     public Document saveDocument(MultipartFile file, String updatedFileName, Authentication authentication) {
@@ -67,8 +72,12 @@ public class DocumentService {
     }
 
     public ModelAndView getAllDocumentsAsModel(Authentication authentication) {
-        ArrayList<Document> documents;
-        documents = getAllDocuments(authentication);
+        ArrayList<DocumentDTO> documents;
+
+        documents = getAllDocuments(authentication)
+                .stream()
+                .map((document)->modelMapper.map(document,DocumentDTO.class))
+                .collect(Collectors.toCollection(ArrayList::new));
         return new ModelAndView("filesOverview", "documents", documents);
     }
 }

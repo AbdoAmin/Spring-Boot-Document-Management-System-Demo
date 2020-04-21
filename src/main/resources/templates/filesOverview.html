@@ -52,8 +52,8 @@
                 <p class="m-0" th:utext="'<b>Uploaded On:</b> ' + *{#dates.format(insertionDate, 'yyyy-MM-dd HH:mm')} ">Uploaded On: </p>
             </td>
             <td>
-                <a class="btn btn-primary m-1" th:href="@{'/download/' + ${file.getFileName()}}">Download</a>
-                <form style="display: inline" th:action="@{'/delete/' + ${file.getFileName()}}" action="https://google.com">
+                <a class="btn btn-primary m-1" th:href="@{'/download/' + ${file.fileName}}">Download</a>
+                <form style="display: inline" th:action="@{'/delete/' + ${file.fileName}}" action="https://google.com">
                     <input th:id="'deleteBtn'+${iter.index+1}" class="btn btn-danger m-1" type="submit" value="Delete" disabled/>
                 </form>
 <!--                <button  th:id="'deleteBtn'+${iter.index+1}" class="btn btn-danger m-1" th:href="@{'/delete/' + ${file.getFileName()}}"  disabled="disabled">Delete</button>-->
